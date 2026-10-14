@@ -1,0 +1,8 @@
+# Sensor node hanya boleh publish ke topic farm-nya
+user esp_tank3
+topic write farm1/tank3/#
+
+# Node-RED membaca semua dan boleh mengirim perintah ke aktuator
+user nodered
+topic read farm1/#
+topic write farm1/+/cmd/#

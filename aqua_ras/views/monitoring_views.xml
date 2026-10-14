@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tank: kanban dashboard -->
+    <record id="aqua_tank_view_kanban" model="ir.ui.view">
+        <field name="name">aqua.tank.kanban</field>
+        <field name="model">aqua.tank</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color">
+                <field name="color"/>
+                <field name="open_alert_count"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold fs-4"/>
+                        <div class="text-muted"><field name="farm_id"/></div>
+                        <div class="mt-2">
+                            <div>DO: <field name="last_do"/> mg/L</div>
+                            <div>Suhu: <field name="last_temp"/> °C</div>
+                            <div>pH: <field name="last_ph"/></div>
+                        </div>
+                        <div class="mt-2">Batch: <field name="current_batch_id"/></div>
+                        <div class="mt-1 fw-bold" invisible="open_alert_count == 0">
+                            Alarm aktif: <field name="open_alert_count"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="aqua_tank_view_list" model="ir.ui.view">
+        <field name="name">aqua.tank.list</field>
+        <field name="model">aqua.tank</field>
+        <field name="arch" type="xml"><list><field name="name"/><field name="farm_id"/><field name="system_id"/><field name="volume_m3"/><field name="current_batch_id"/><field name="open_alert_count"/></list></field>
+    </record>
+    <record id="aqua_tank_view_form" model="ir.ui.view">
+        <field name="name">aqua.tank.form</field>
+        <field name="model">aqua.tank</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_alerts" type="object" class="oe_stat_button" icon="fa-bell">
+                            <field name="open_alert_count" widget="statinfo" string="Alarm aktif"/>
+                        </button>
+                        <button name="action_view_readings" type="object" class="oe_stat_button" icon="fa-line-chart" string="Grafik sensor"/>
+                    </div>
+                    <group>
+                        <group><field name="name"/><field name="code"/><field name="farm_id"/><field name="system_id"/><field name="volume_m3"/></group>
+                        <group><field name="current_batch_id"/><field name="last_do"/><field name="last_temp"/><field name="last_ph"/></group>
+                    </group>
+                    <notebook><page string="Perangkat"><field name="device_ids"><list><field name="code"/><field name="name"/><field name="parameter"/><field name="last_value"/><field name="state"/></list></field></page></notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="aqua_tank_action" model="ir.actions.act_window">
+        <field name="name">Monitoring Tangki</field><field name="res_model">aqua.tank</field><field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <!-- Reading -->
+    <record id="aqua_reading_view_list" model="ir.ui.view">
+        <field name="name">aqua.reading.agg.list</field>
+        <field name="model">aqua.reading.agg</field>
+        <field name="arch" type="xml"><list create="false" edit="false" decoration-warning="flag != 'ok'"><field name="timestamp"/><field name="tank_id"/><field name="device_id"/><field name="parameter"/><field name="avg"/><field name="min"/><field name="max"/><field name="flag"/></list></field>
+    </record>
+    <record id="aqua_reading_view_graph" model="ir.ui.view">
+        <field name="name">aqua.reading.agg.graph</field>
+        <field name="model">aqua.reading.agg</field>
+        <field name="arch" type="xml">
+            <graph type="line">
+                <field name="timestamp" interval="hour"/>
+                <field name="parameter"/>
+                <field name="avg" type="measure"/>
+            </graph>
+        </field>
+    </record>
+    <record id="aqua_reading_view_pivot" model="ir.ui.view">
+        <field name="name">aqua.reading.agg.pivot</field>
+        <field name="model">aqua.reading.agg</field>
+        <field name="arch" type="xml">
+            <pivot><field name="tank_id" type="row"/><field name="parameter" type="col"/><field name="avg" type="measure"/></pivot>
+        </field>
+    </record>
+    <record id="aqua_reading_view_search" model="ir.ui.view">
+        <field name="name">aqua.reading.agg.search</field>
+        <field name="model">aqua.reading.agg</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="tank_id"/><field name="device_id"/>
+                <filter name="f_do" string="DO" domain="[('parameter','=','do')]"/>
+                <filter name="f_temp" string="Suhu" domain="[('parameter','=','temp')]"/>
+                <filter name="f_ph" string="pH" domain="[('parameter','=','ph')]"/>
+                <group><filter name="g_tank" string="Tangki" context="{'group_by':'tank_id'}"/><filter name="g_param" string="Parameter" context="{'group_by':'parameter'}"/></group>
+            </search>
+        </field>
+    </record>
+    <record id="aqua_reading_action" model="ir.actions.act_window">
+        <field name="name">Pembacaan Sensor</field><field name="res_model">aqua.reading.agg</field><field name="view_mode">graph,pivot,list</field>
+    </record>
+
+    <!-- Alert -->
+    <record id="aqua_alert_view_list" model="ir.ui.view">
+        <field name="name">aqua.alert.list</field>
+        <field name="model">aqua.alert</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="severity == 'critical' and state != 'closed'" decoration-warning="severity == 'warning' and state != 'closed'" decoration-muted="state == 'closed'">
+                <field name="name"/><field name="date_start"/><field name="tank_id"/><field name="parameter"/>
+                <field name="value"/><field name="threshold"/><field name="severity"/><field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+    <record id="aqua_alert_view_form" model="ir.ui.view">
+        <field name="name">aqua.alert.form</field>
+        <field name="model">aqua.alert</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_ack" type="object" string="Tangani (Acknowledge)" class="btn-primary" invisible="state != 'open'"/>
+                    <button name="action_close" type="object" string="Tutup" invisible="state == 'closed'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <h1><field name="name"/></h1>
+                    <group>
+                        <group><field name="alert_type"/><field name="tank_id"/><field name="device_id"/><field name="rule_id"/><field name="severity"/></group>
+                        <group><field name="parameter"/><field name="value"/><field name="threshold"/><field name="date_start"/><field name="date_end"/>
+                            <field name="ack_user_id"/><field name="ack_date"/><field name="escalated"/><field name="maintenance_id"/></group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="aqua_alert_view_search" model="ir.ui.view">
+        <field name="name">aqua.alert.search</field>
+        <field name="model">aqua.alert</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="tank_id"/><field name="name"/>
+                <filter name="f_active" string="Aktif" domain="[('state','!=','closed')]"/>
+                <filter name="f_crit" string="Critical" domain="[('severity','=','critical')]"/>
+            </search>
+        </field>
+    </record>
+    <record id="aqua_alert_action" model="ir.actions.act_window">
+        <field name="name">Alarm</field><field name="res_model">aqua.alert</field><field name="view_mode">list,form</field>
+        <field name="context">{'search_default_f_active': 1}</field>
+    </record>
+</odoo>

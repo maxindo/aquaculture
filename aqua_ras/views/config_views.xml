@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Farm -->
+    <record id="aqua_farm_view_list" model="ir.ui.view">
+        <field name="name">aqua.farm.list</field>
+        <field name="model">aqua.farm</field>
+        <field name="arch" type="xml"><list><field name="name"/><field name="code"/><field name="tank_count"/></list></field>
+    </record>
+    <record id="aqua_farm_view_form" model="ir.ui.view">
+        <field name="name">aqua.farm.form</field>
+        <field name="model">aqua.farm</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group><field name="name"/><field name="code"/><field name="company_id"/><field name="address"/></group>
+                    <notebook>
+                        <page string="Tangki"><field name="tank_ids"><list><field name="name"/><field name="volume_m3"/></list></field></page>
+                        <page string="Sistem RAS"><field name="system_ids"><list editable="bottom"><field name="name"/><field name="total_volume_m3"/><field name="components"/></list></field></page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="aqua_farm_action" model="ir.actions.act_window">
+        <field name="name">Farm</field><field name="res_model">aqua.farm</field><field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Gateway -->
+    <record id="aqua_gateway_view_list" model="ir.ui.view">
+        <field name="name">aqua.gateway.list</field>
+        <field name="model">aqua.gateway</field>
+        <field name="arch" type="xml"><list><field name="name"/><field name="farm_id"/><field name="last_seen"/></list></field>
+    </record>
+    <record id="aqua_gateway_view_form" model="ir.ui.view">
+        <field name="name">aqua.gateway.form</field>
+        <field name="model">aqua.gateway</field>
+        <field name="arch" type="xml">
+            <form>
+                <header><button name="action_generate_key" type="object" string="Generate API Key" class="btn-primary"
+                                confirm="Key lama akan tidak berlaku. Lanjutkan?"/></header>
+                <sheet>
+                    <group><field name="name"/><field name="farm_id"/><field name="last_seen"/><field name="active"/></group>
+                    <field name="device_ids"><list><field name="code"/><field name="name"/><field name="mqtt_topic"/></list></field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="aqua_gateway_action" model="ir.actions.act_window">
+        <field name="name">Gateway</field><field name="res_model">aqua.gateway</field><field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Device -->
+    <record id="aqua_device_view_list" model="ir.ui.view">
+        <field name="name">aqua.device.list</field>
+        <field name="model">aqua.device</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'offline'" decoration-warning="calibration_due" decoration-muted="state == 'never'">
+                <field name="code"/><field name="name"/><field name="tank_id"/><field name="parameter"/>
+                <field name="last_value"/><field name="last_seen"/><field name="state" widget="badge"/>
+                <field name="calibration_due" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+    <record id="aqua_device_view_form" model="ir.ui.view">
+        <field name="name">aqua.device.form</field>
+        <field name="model">aqua.device</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/><field name="code"/><field name="kind"/><field name="parameter"/>
+                            <field name="unit"/><field name="active"/>
+                        </group>
+                        <group>
+                            <field name="tank_id"/><field name="gateway_id"/><field name="mqtt_topic"/>
+                            <field name="equipment_id"/><field name="offline_after_min"/>
+                        </group>
+                        <group string="Kalibrasi">
+                            <field name="calibration_date"/><field name="calibration_interval_days"/><field name="calibration_due"/>
+                        </group>
+                        <group string="Status">
+                            <field name="state"/><field name="last_value"/><field name="last_seen"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="aqua_device_action" model="ir.actions.act_window">
+        <field name="name">Sensor / Aktuator</field><field name="res_model">aqua.device</field><field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Alert rule -->
+    <record id="aqua_alert_rule_view_list" model="ir.ui.view">
+        <field name="name">aqua.alert.rule.list</field>
+        <field name="model">aqua.alert.rule</field>
+        <field name="arch" type="xml"><list><field name="name"/><field name="parameter"/><field name="operator"/><field name="threshold"/><field name="duration_min"/><field name="severity"/></list></field>
+    </record>
+    <record id="aqua_alert_rule_view_form" model="ir.ui.view">
+        <field name="name">aqua.alert.rule.form</field>
+        <field name="model">aqua.alert.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/><field name="parameter"/><field name="operator"/><field name="threshold"/>
+                            <field name="hysteresis"/><field name="duration_min"/><field name="severity"/>
+                        </group>
+                        <group>
+                            <field name="tank_ids" widget="many2many_tags"/>
+                            <field name="notify_user_ids" widget="many2many_tags"/>
+                            <field name="escalate_min" invisible="severity != 'critical'"/>
+                            <field name="escalate_user_ids" widget="many2many_tags" invisible="severity != 'critical'"/>
+                            <field name="create_maintenance"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="aqua_alert_rule_action" model="ir.actions.act_window">
+        <field name="name">Aturan Alert</field><field name="res_model">aqua.alert.rule</field><field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Ration -->
+    <record id="aqua_ration_rule_view_list" model="ir.ui.view">
+        <field name="name">aqua.ration.rule.list</field>
+        <field name="model">aqua.ration.rule</field>
+        <field name="arch" type="xml"><list editable="bottom"><field name="abw_min"/><field name="abw_max"/><field name="pct"/><field name="pellet_size"/><field name="note"/></list></field>
+    </record>
+    <record id="aqua_ration_rule_action" model="ir.actions.act_window">
+        <field name="name">Tabel Ration Pakan</field><field name="res_model">aqua.ration.rule</field><field name="view_mode">list</field>
+    </record>
+</odoo>

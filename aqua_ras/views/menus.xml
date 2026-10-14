@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_aqua_root" name="Aqua RAS" sequence="50"
+              groups="group_aqua_operator"/>
+
+    <menuitem id="menu_aqua_monitoring" name="Monitoring" parent="menu_aqua_root" sequence="10"/>
+    <menuitem id="menu_aqua_tanks" name="Tangki (Dashboard)" parent="menu_aqua_monitoring" action="aqua_tank_action" sequence="1"/>
+    <menuitem id="menu_aqua_alerts" name="Alarm" parent="menu_aqua_monitoring" action="aqua_alert_action" sequence="2"/>
+    <menuitem id="menu_aqua_readings" name="Pembacaan Sensor" parent="menu_aqua_monitoring" action="aqua_reading_action" sequence="3"/>
+
+    <menuitem id="menu_aqua_production" name="Produksi" parent="menu_aqua_root" sequence="20"/>
+    <menuitem id="menu_aqua_batch" name="Batch" parent="menu_aqua_production" action="aqua_batch_action" sequence="1"/>
+    <menuitem id="menu_aqua_feeding" name="Pakan" parent="menu_aqua_production" action="aqua_feeding_action" sequence="2"/>
+    <menuitem id="menu_aqua_sampling" name="Sampling" parent="menu_aqua_production" action="aqua_sampling_action" sequence="3"/>
+    <menuitem id="menu_aqua_mortality" name="Mortalitas" parent="menu_aqua_production" action="aqua_mortality_action" sequence="4"/>
+    <menuitem id="menu_aqua_water_test" name="Uji Air Manual" parent="menu_aqua_production" action="aqua_water_test_action" sequence="5"/>
+    <menuitem id="menu_aqua_harvest" name="Panen" parent="menu_aqua_production" action="aqua_harvest_action" sequence="6"/>
+
+    <menuitem id="menu_aqua_config" name="Konfigurasi" parent="menu_aqua_root" sequence="90" groups="group_aqua_supervisor"/>
+    <menuitem id="menu_aqua_farm" name="Farm" parent="menu_aqua_config" action="aqua_farm_action" sequence="1"/>
+    <menuitem id="menu_aqua_device" name="Sensor / Aktuator" parent="menu_aqua_config" action="aqua_device_action" sequence="2"/>
+    <menuitem id="menu_aqua_gateway" name="Gateway" parent="menu_aqua_config" action="aqua_gateway_action" sequence="3" groups="group_aqua_manager"/>
+    <menuitem id="menu_aqua_rule" name="Aturan Alert" parent="menu_aqua_config" action="aqua_alert_rule_action" sequence="4"/>
+    <menuitem id="menu_aqua_ration" name="Tabel Ration" parent="menu_aqua_config" action="aqua_ration_rule_action" sequence="5"/>
+</odoo>
