@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- CONTOH umum nila. Validasi dengan teknisi / produsen pakan sebelum dipakai. -->
+<odoo noupdate="1">
+    <record id="ration_1" model="aqua.ration.rule"><field name="abw_min">0</field><field name="abw_max">5</field><field name="pct">8.0</field><field name="pellet_size">Crumble 0.5-1 mm</field></record>
+    <record id="ration_2" model="aqua.ration.rule"><field name="abw_min">5</field><field name="abw_max">20</field><field name="pct">5.5</field><field name="pellet_size">1.5-2 mm</field></record>
+    <record id="ration_3" model="aqua.ration.rule"><field name="abw_min">20</field><field name="abw_max">50</field><field name="pct">4.0</field><field name="pellet_size">2-3 mm</field></record>
+    <record id="ration_4" model="aqua.ration.rule"><field name="abw_min">50</field><field name="abw_max">100</field><field name="pct">3.2</field><field name="pellet_size">3 mm</field></record>
+    <record id="ration_5" model="aqua.ration.rule"><field name="abw_min">100</field><field name="abw_max">250</field><field name="pct">2.5</field><field name="pellet_size">4 mm</field></record>
+    <record id="ration_6" model="aqua.ration.rule"><field name="abw_min">250</field><field name="abw_max">500</field><field name="pct">1.8</field><field name="pellet_size">4-5 mm</field></record>
+    <record id="ration_7" model="aqua.ration.rule"><field name="abw_min">500</field><field name="abw_max">5000</field><field name="pct">1.3</field><field name="pellet_size">5 mm</field></record>
+</odoo>

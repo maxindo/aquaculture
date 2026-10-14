@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Batch -->
+    <record id="aqua_batch_view_list" model="ir.ui.view">
+        <field name="name">aqua.batch.list</field>
+        <field name="model">aqua.batch</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'running'" decoration-muted="state in ('cancel','harvested')">
+                <field name="name"/><field name="tank_id"/><field name="species"/><field name="start_date"/>
+                <field name="age_days"/><field name="current_qty"/><field name="biomass_kg"/><field name="fcr"/><field name="sr"/><field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+    <record id="aqua_batch_view_form" model="ir.ui.view">
+        <field name="name">aqua.batch.form</field>
+        <field name="model">aqua.batch</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start" type="object" string="Mulai Batch" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_finish" type="object" string="Selesai Panen" invisible="state != 'running'"/>
+                    <button name="action_cancel" type="object" string="Batal" invisible="state in ('cancel','harvested')"/>
+                    <button name="action_draft" type="object" string="Set ke Draft" invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,running,harvested"/>
+                </header>
+                <sheet>
+                    <h1><field name="name"/></h1>
+                    <group>
+                        <group>
+                            <field name="tank_id" readonly="state != 'draft'"/><field name="species"/>
+                            <field name="start_date"/><field name="end_date"/>
+                        </group>
+                        <group>
+                            <field name="initial_qty" readonly="state != 'draft'"/>
+                            <field name="initial_abw_g" readonly="state != 'draft'"/>
+                            <field name="seed_cost"/><field name="analytic_account_id"/><field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="KPI">
+                        <group>
+                            <field name="age_days"/><field name="current_qty"/><field name="mortality_qty"/>
+                            <field name="last_abw_g"/><field name="biomass_kg"/><field name="total_feed_kg"/>
+                        </group>
+                        <group>
+                            <field name="fcr"/><field name="sr"/><field name="adg"/><field name="sgr"/>
+                            <field name="harvest_qty"/><field name="harvest_kg"/>
+                        </group>
+                    </group>
+                    <group string="Rekomendasi Pakan Hari Ini" invisible="state != 'running'">
+                        <field name="ration_pct"/><field name="ration_kg_day"/><field name="ration_note"/>
+                    </group>
+                    <group string="Biaya &amp; HPP">
+                        <field name="feed_cost"/><field name="other_cost"/><field name="total_cost"/><field name="hpp_per_kg"/>
+                    </group>
+                    <notebook>
+                        <page string="Pakan"><field name="feeding_ids"><list editable="bottom"><field name="datetime"/><field name="qty_kg"/><field name="product_id"/><field name="source"/><field name="consume_stock"/><field name="feed_cost"/></list></field></page>
+                        <page string="Sampling"><field name="sampling_ids"><list editable="bottom"><field name="date"/><field name="sample_count"/><field name="total_weight_g"/><field name="abw_g"/><field name="avg_length_cm"/></list></field></page>
+                        <page string="Mortalitas"><field name="mortality_ids"><list editable="bottom"><field name="date"/><field name="qty"/><field name="cause"/><field name="note"/></list></field></page>
+                        <page string="Panen"><field name="harvest_ids"><list editable="bottom"><field name="date"/><field name="partial"/><field name="qty"/><field name="weight_kg"/><field name="abw_g"/><field name="product_id"/><field name="partner_id"/></list></field></page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <record id="aqua_batch_action" model="ir.actions.act_window">
+        <field name="name">Batch Budidaya</field><field name="res_model">aqua.batch</field><field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Feeding -->
+    <record id="aqua_feeding_view_list" model="ir.ui.view">
+        <field name="name">aqua.feeding.list</field>
+        <field name="model">aqua.feeding</field>
+        <field name="arch" type="xml"><list editable="top"><field name="datetime"/><field name="batch_id"/><field name="tank_id"/><field name="qty_kg"/><field name="product_id"/><field name="source"/><field name="consume_stock"/><field name="feed_cost"/></list></field>
+    </record>
+    <record id="aqua_feeding_action" model="ir.actions.act_window">
+        <field name="name">Pemberian Pakan</field><field name="res_model">aqua.feeding</field><field name="view_mode">list</field>
+    </record>
+
+    <!-- Sampling -->
+    <record id="aqua_sampling_view_list" model="ir.ui.view">
+        <field name="name">aqua.sampling.list</field>
+        <field name="model">aqua.sampling</field>
+        <field name="arch" type="xml"><list editable="top"><field name="date"/><field name="batch_id"/><field name="sample_count"/><field name="total_weight_g"/><field name="abw_g"/><field name="avg_length_cm"/></list></field>
+    </record>
+    <record id="aqua_sampling_action" model="ir.actions.act_window">
+        <field name="name">Sampling</field><field name="res_model">aqua.sampling</field><field name="view_mode">list</field>
+    </record>
+
+    <!-- Mortality -->
+    <record id="aqua_mortality_view_list" model="ir.ui.view">
+        <field name="name">aqua.mortality.list</field>
+        <field name="model">aqua.mortality</field>
+        <field name="arch" type="xml"><list editable="top"><field name="date"/><field name="batch_id"/><field name="qty"/><field name="cause"/><field name="note"/></list></field>
+    </record>
+    <record id="aqua_mortality_action" model="ir.actions.act_window">
+        <field name="name">Mortalitas</field><field name="res_model">aqua.mortality</field><field name="view_mode">list</field>
+    </record>
+
+    <!-- Water test -->
+    <record id="aqua_water_test_view_list" model="ir.ui.view">
+        <field name="name">aqua.water.test.list</field>
+        <field name="model">aqua.water.test</field>
+        <field name="arch" type="xml"><list editable="top"><field name="datetime"/><field name="tank_id"/><field name="temp_c"/><field name="ph"/><field name="tan_mgl"/><field name="nh3_mgl"/><field name="no2_mgl"/><field name="no3_mgl"/><field name="alkalinity"/></list></field>
+    </record>
+    <record id="aqua_water_test_action" model="ir.actions.act_window">
+        <field name="name">Uji Air Manual</field><field name="res_model">aqua.water.test</field><field name="view_mode">list</field>
+    </record>
+
+    <!-- Harvest -->
+    <record id="aqua_harvest_view_list" model="ir.ui.view">
+        <field name="name">aqua.harvest.list</field>
+        <field name="model">aqua.harvest</field>
+        <field name="arch" type="xml"><list editable="top"><field name="date"/><field name="batch_id"/><field name="partial"/><field name="qty"/><field name="weight_kg"/><field name="abw_g"/><field name="product_id"/><field name="partner_id"/></list></field>
+    </record>
+    <record id="aqua_harvest_action" model="ir.actions.act_window">
+        <field name="name">Panen</field><field name="res_model">aqua.harvest</field><field name="view_mode">list</field>
+    </record>
+</odoo>

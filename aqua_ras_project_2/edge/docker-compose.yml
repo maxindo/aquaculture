@@ -1,0 +1,24 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: always
+    ports: ["1883:1883"]
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto/passwd:/mosquitto/config/passwd
+      - ./mosquitto/acl:/mosquitto/config/acl
+      - mosq_data:/mosquitto/data
+  nodered:
+    image: nodered/node-red:latest
+    restart: always
+    ports: ["1880:1880"]
+    environment:
+      - TZ=Asia/Jakarta
+      - ODOO_URL=https://odoo.example.com          # ganti
+      - ODOO_KEY=ISI_API_KEY_GATEWAY               # dari tombol "Generate API Key"
+    volumes:
+      - nodered_data:/data
+    depends_on: [mosquitto]
+volumes:
+  mosq_data:
+  nodered_data:

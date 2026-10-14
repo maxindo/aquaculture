@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_aqua_batch" model="ir.sequence">
+        <field name="name">Aqua Batch</field>
+        <field name="code">aqua.batch</field>
+        <field name="prefix">BATCH/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+    <record id="seq_aqua_alert" model="ir.sequence">
+        <field name="name">Aqua Alert</field>
+        <field name="code">aqua.alert</field>
+        <field name="prefix">ALR/</field>
+        <field name="padding">6</field>
+    </record>
+    <record id="param_retention" model="ir.config_parameter">
+        <field name="key">aqua_ras.retention_months</field>
+        <field name="value">12</field>
+    </record>
+</odoo>

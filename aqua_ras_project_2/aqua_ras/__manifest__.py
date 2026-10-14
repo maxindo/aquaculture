@@ -1,0 +1,23 @@
+{
+    'name': 'Aqua RAS - Budidaya Ikan Air Tawar',
+    'summary': 'IoT monitoring, alert, batch produksi dan HPP untuk budidaya ikan sistem RAS',
+    'version': '19.0.1.0.0',
+    'category': 'Agriculture',
+    'author': 'Custom',
+    'license': 'LGPL-3',
+    'depends': ['base', 'mail', 'stock', 'maintenance', 'analytic'],
+    'data': [
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        'data/sequence_data.xml',
+        'data/analytic_data.xml',
+        'data/ration_data.xml',
+        'data/cron_data.xml',
+        'views/config_views.xml',
+        'views/monitoring_views.xml',
+        'views/production_views.xml',
+        'views/menus.xml',
+    ],
+    'application': True,
+    'installable': True,
+}
