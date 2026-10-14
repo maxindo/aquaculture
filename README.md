@@ -1,5 +1,4 @@
-# aquaculture
-IOT Aquaculture
+# IOT Aquaculture
 
 # Aqua RAS untuk Odoo 19
 
